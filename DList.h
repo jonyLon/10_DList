@@ -32,12 +32,15 @@ public:
 	bool isEmpty() const;
 	void removeData(const T& data);
 	void clear();
+	void addBefore(const T& place, const T& data);
+	void addAfter(const T& place, const T& data);
+	int replace(const T& place, const T& data);
 private:
 	Node<T>* findData(const T& data);
-	void clone(DList<T>* dest, const DList<T>& source);
 	Node<T>* head = nullptr;
 	Node<T>* tail = nullptr;
 	size_t size = 0;
+	void clone(DList<T>* dest, const DList <T>& source);
 };
 
 template<typename T>
@@ -157,15 +160,68 @@ inline void DList<T>::removeData(const T& data)
 	--size;
 }
 
-//template<typename T>
-//inline void DList<T>::clear()
-//{
-//	auto tmp = 
-//	while ()
-//	{
-//
-//	}
-//}
+template<typename T>
+inline void DList<T>::clear()
+{
+	auto tmp = head;
+	while (tmp != nullptr)
+	{
+		removeHead();
+		tmp = tmp->next;
+	}
+}
+
+template<typename T>
+inline void DList<T>::addBefore(const T& place, const T& data)
+{
+	auto find = findData(place);
+	if (find == nullptr) {
+		return;
+	}
+	if (find == head) {
+		addHead(data);
+	}
+	Node<T>* tmp = new Node<T>(data, find->prev, find);
+	find->prev->next = tmp;
+	find->prev = tmp;
+}
+
+template<typename T>
+inline void DList<T>::addAfter(const T& place, const T& data)
+{
+	auto find = findData(place);
+	if (find == nullptr) {
+		return;
+	}
+	if (find == tail) {
+		addTail(data);
+	}
+	Node<T>* tmp = new Node<T>(data, find, find->next);
+	find->next->prev = tmp;
+	find->next = tmp;
+}
+
+template<typename T>
+inline int DList<T>::replace(const T& place, const T& data)
+{
+	auto find = findData(place);
+	if (find == nullptr)
+	{
+		return 0;
+	}
+	if (find == head) {
+		removeHead();
+		addHead(data);
+	}
+	if (find == tail) {
+		removeTail();
+		addTail(data);
+	}
+	auto tmp = new Node<T>(data, find->prev, find->next);
+	find->prev->next = tmp;
+	find->next->prev = tmp;
+	delete find;
+}
 
 template<typename T>
 inline Node<T>* DList<T>::findData(const T& data)
@@ -181,13 +237,14 @@ inline Node<T>* DList<T>::findData(const T& data)
 template<typename T>
 inline void DList<T>::clone(DList<T>* dest, const DList<T>& source)
 {
-	if (!dest->isEmpty()) {
+	if (!dest->isEmpty())
+	{
 		dest->clear();
 	}
-	Node<T>* tmp = source.head;
-	while (tmp != nullptr)
+	Node<T>* tmp_ = source.head;
+	while (tmp_ != nullptr)
 	{
-		dest->addTail(tmp->data);
-		tmp = tmp->next;
+		dest->addTail(tmp_->data);
+		tmp_ = tmp_->next;
 	}
 }
