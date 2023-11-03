@@ -19,7 +19,7 @@ int main()
     list2.addTail(16);
     list2.addAfter(13, 88);
     list2.addBefore(13, 88);
-    list2.replace(13, 1);
+    cout <<"Replaces: " << list2.replaceAll(88, 1) << endl;
     list2.print();
     list2.printR();
     DList<int> clone(list);

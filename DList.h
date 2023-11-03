@@ -34,13 +34,14 @@ public:
 	void clear();
 	void addBefore(const T& place, const T& data);
 	void addAfter(const T& place, const T& data);
-	int replace(const T& place, const T& data);
+	int replaceAll(const T& place, const T& data);
 private:
 	Node<T>* findData(const T& data);
 	Node<T>* head = nullptr;
 	Node<T>* tail = nullptr;
 	size_t size = 0;
 	void clone(DList<T>* dest, const DList <T>& source);
+	void replace(Node<T>* place, const T& data);
 };
 
 template<typename T>
@@ -201,26 +202,48 @@ inline void DList<T>::addAfter(const T& place, const T& data)
 	find->next = tmp;
 }
 
+//template<typename T>
+//inline int DList<T>::replace(const T& place, const T& data)
+//{
+//	int counter = 0;
+//	auto pointer = head;
+//	while (pointer != nullptr)
+//	{
+//		if (pointer->data == place) {
+//			Node<T>* find = pointer;
+//			if (find == head) {
+//				removeHead();
+//				addHead(data);
+//			}
+//			if (find == tail) {
+//				removeTail();
+//				addTail(data);
+//			}
+//			auto tmp = new Node<T>(data, find->prev, find->next);
+//			find->prev->next = tmp;
+//			find->next->prev = tmp;
+//			counter++;
+//		}
+//		pointer = pointer->next;
+//	}
+//	return counter;
+//}
+
 template<typename T>
-inline int DList<T>::replace(const T& place, const T& data)
+inline int DList<T>::replaceAll(const T& place, const T& data)
 {
-	auto find = findData(place);
-	if (find == nullptr)
+	int counter = 0;
+	auto pointer = head;
+	while (pointer != nullptr)
 	{
-		return 0;
+		if (pointer->data == place) {
+			replace(pointer,data);
+			counter++;
+		}
+		pointer = pointer->next;
 	}
-	if (find == head) {
-		removeHead();
-		addHead(data);
-	}
-	if (find == tail) {
-		removeTail();
-		addTail(data);
-	}
-	auto tmp = new Node<T>(data, find->prev, find->next);
-	find->prev->next = tmp;
-	find->next->prev = tmp;
-	delete find;
+
+	return counter;
 }
 
 template<typename T>
@@ -247,4 +270,21 @@ inline void DList<T>::clone(DList<T>* dest, const DList<T>& source)
 		dest->addTail(tmp_->data);
 		tmp_ = tmp_->next;
 	}
+}
+
+template<typename T>
+inline void DList<T>::replace(Node<T>* place, const T& data)
+{
+	Node<T>* find = place;
+	if (find == head) {
+		removeHead();
+		addHead(data);
+	}
+	if (find == tail) {
+		removeTail();
+		addTail(data);
+	}
+	auto tmp = new Node<T>(data, find->prev, find->next);
+	find->prev->next = tmp;
+	find->next->prev = tmp;
 }
