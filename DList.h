@@ -35,6 +35,9 @@ public:
 	void addBefore(const T& place, const T& data);
 	void addAfter(const T& place, const T& data);
 	int replaceAll(const T& place, const T& data);
+	DList<T> operator+(const DList<T>& other)const;
+	void operator+=(const DList<T>& other);
+	DList<T> operator*(const DList<T>& other);
 private:
 	Node<T>* findData(const T& data);
 	Node<T>* head = nullptr;
@@ -247,6 +250,54 @@ inline int DList<T>::replaceAll(const T& place, const T& data)
 }
 
 template<typename T>
+inline DList<T> DList<T>::operator+(const DList<T>& other) const
+{
+	DList<T>newList;
+	auto currentPointer = head;
+	auto otherPoitner = other.head;
+	while (currentPointer != nullptr)
+	{
+		newList.addTail(currentPointer->data);
+		currentPointer = currentPointer->next;
+	}
+	while (otherPoitner != nullptr)
+	{
+		newList.addTail(otherPoitner->data);
+		otherPoitner = otherPoitner->next;
+	}
+	return newList;
+}
+
+template<typename T>
+inline void DList<T>::operator+=(const DList<T>& other)
+{
+	auto otherPoitner = other.head;
+	while (otherPoitner != nullptr)
+	{
+		addTail(otherPoitner->data);
+		otherPoitner = otherPoitner->next;
+	}
+}
+
+template<typename T>
+inline DList<T> DList<T>::operator*(const DList<T> &other)
+{
+	DList<T>newList;
+	auto otherPoitner = other.head;
+	while (otherPoitner != nullptr)
+	{
+
+		if (findData(otherPoitner->data) != nullptr && newList.findData(otherPoitner->data) == nullptr){
+			newList.addTail(otherPoitner->data);
+		}
+		otherPoitner = otherPoitner->next;
+	}
+	return newList;
+}
+
+
+
+template<typename T>
 inline Node<T>* DList<T>::findData(const T& data)
 {
 	auto tmp = head;
@@ -256,6 +307,7 @@ inline Node<T>* DList<T>::findData(const T& data)
 	}
 	return tmp;
 }
+
 
 template<typename T>
 inline void DList<T>::clone(DList<T>* dest, const DList<T>& source)
