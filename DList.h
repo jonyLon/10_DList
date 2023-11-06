@@ -38,6 +38,7 @@ public:
 	DList<T> operator+(const DList<T>& other)const;
 	void operator+=(const DList<T>& other);
 	DList<T> operator*(const DList<T>& other);
+	void reverse();
 private:
 	Node<T>* findData(const T& data);
 	Node<T>* head = nullptr;
@@ -46,6 +47,18 @@ private:
 	void clone(DList<T>* dest, const DList <T>& source);
 	void replace(Node<T>* place, const T& data);
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 template<typename T>
 inline void DList<T>::addHead(const T& data)
@@ -173,6 +186,7 @@ inline void DList<T>::clear()
 		removeHead();
 		tmp = tmp->next;
 	}
+	size = 0;
 }
 
 template<typename T>
@@ -205,32 +219,7 @@ inline void DList<T>::addAfter(const T& place, const T& data)
 	find->next = tmp;
 }
 
-//template<typename T>
-//inline int DList<T>::replace(const T& place, const T& data)
-//{
-//	int counter = 0;
-//	auto pointer = head;
-//	while (pointer != nullptr)
-//	{
-//		if (pointer->data == place) {
-//			Node<T>* find = pointer;
-//			if (find == head) {
-//				removeHead();
-//				addHead(data);
-//			}
-//			if (find == tail) {
-//				removeTail();
-//				addTail(data);
-//			}
-//			auto tmp = new Node<T>(data, find->prev, find->next);
-//			find->prev->next = tmp;
-//			find->next->prev = tmp;
-//			counter++;
-//		}
-//		pointer = pointer->next;
-//	}
-//	return counter;
-//}
+
 
 template<typename T>
 inline int DList<T>::replaceAll(const T& place, const T& data)
@@ -295,6 +284,87 @@ inline DList<T> DList<T>::operator*(const DList<T> &other)
 	return newList;
 }
 
+//template<typename T>
+//void DList<T>::reverse()
+//{
+//	auto head_ = head;
+//	auto tail_ = tail;
+//	for (int i = 0; i < size / 2; i++)
+//	{
+//		if (i == 0)
+//		{
+//			head = tail_;
+//			tail = head_;
+//			head_->next->prev = head;
+//			head->next = head_->next;
+//			tail_->prev->next = tail;
+//			tail->prev = tail_->prev;
+//			head->prev = nullptr;
+//			tail->next = nullptr;
+//			head_ = head->next;
+//			tail_ = tail->prev;
+//			continue;
+//		}
+//		auto tmp = head_;
+//		auto tmp_ = tail_;
+//		head_->prev->next = tail_;
+//		head_->next->prev = tail_;
+//		head_ = tail_;
+//		head_->next = tmp->next;
+//		head_->prev = tmp->prev;
+//
+//
+//		tail_->next->prev = tmp;
+//		tail_->prev->next = tmp;
+//		tail_ = tmp;
+//		tail_->prev = tmp_->prev;
+//		tail_->next = tmp_->next;
+//		head_ = tail_->next;
+//		tail_ = tmp->prev;
+//
+//	}
+//}
+
+//template<typename T>
+//void DList<T>::reverse() {
+//
+//	Node<T>* current = head;
+//	Node<T>* tmp = nullptr;
+//
+//
+//
+//	while (current != nullptr)
+//	{
+//		tmp = current->prev;
+//		current->prev = current->next;
+//		current->next = tmp;
+//		current = current->prev;
+//	}
+//
+//	tmp = head;
+//	head = tail;
+//	tail = tmp;
+//}
+
+
+template<typename T>
+void DList<T>::reverse() {
+	Node<T>* tmp = nullptr;
+
+	tmp = head;
+	head = tail;
+	tail = tmp;
+
+	Node<T>* current = tail;
+
+	while (current != nullptr)
+	{
+		tmp = current->prev;
+		current->prev = current->next;
+		current->next = tmp;
+		current = current->prev;
+	}
+}
 
 
 template<typename T>
